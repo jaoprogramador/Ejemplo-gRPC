@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.restaurantes.api.grpc";
+
+service RestauranteService {
+    // Definimos el método para obtener un restaurante por ID
+    rpc getOneById(id) returns (RestauranteObject) {}
+    
+    // Definimos el método para obtener todos los restaurantes
+    rpc getAll(Empty) returns (RestauranteList) {}
+}
+
+// Mensaje para enviar el ID del restaurante
+message id {
+    int64 id = 1;
+}
+
+// Objeto que representa la entidad Restaurantes en gRPC
+message RestauranteObject {
+    int64 id = 1;
+    string nombre = 2;
+    string direccion = 3;
+    string especialidad = 4;
+    int32 estado = 5;
+}
+
+// Mensaje vacío para peticiones que no requieren parámetros
+message Empty {
+}
+
+// Lista de objetos para la respuesta de getAll
+message RestauranteList {
+    repeated RestauranteObject restaurante = 1;
+}
