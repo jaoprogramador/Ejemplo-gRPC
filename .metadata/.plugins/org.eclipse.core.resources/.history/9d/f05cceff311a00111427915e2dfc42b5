@@ -1,0 +1,87 @@
+package com.recetas.api.servicesimpl;
+
+import com.recetas.api.entities.Recetas;
+import com.recetas.api.repositories.RecetaRepository;
+import com.recetas.api.services.RecetasService;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+
+@Service
+public class RecetaServiceImpl implements RecetasService {
+
+    @Autowired
+    private RecetaRepository recetaRepository;
+
+    private final ModelMapper modelMapper = new ModelMapper();
+
+    @Async("asyncExecutor")
+    @Override
+    public CompletableFuture<Recetas> save(Recetas receta) {
+        // Al crear una receta, la marcamos como activa (1)
+        receta.setStatus(1);
+        return CompletableFuture.completedFuture(recetaRepository.save(receta));
+    }
+
+    @Async("asyncExecutor")
+    @Override
+    public CompletableFuture<Recetas> getOneById(Long id) {
+        Optional<Receta> receta = recetaRepository.findById(id);
+        return CompletableFuture.completedFuture(receta.orElse(null));
+    }
+
+    @Async("asyncExecutor")
+    @Override
+    public CompletableFuture<List<Recetas>> getAll() {
+        return CompletableFuture.completedFuture(recetaRepository.findAll());
+    }
+
+    @Async("asyncExecutor")
+    @Override
+    public CompletableFuture<Recetas> update(Recetas receta, Long id) {
+        // Buscamos la receta existente por su ID
+        Recetas findReceta = recetaRepository.findById(id).orElse(null);
+
+        if (findReceta != null) {
+            // Mapeamos los cambios del objeto 'receta' al objeto persistido 'findReceta'
+            modelMapper.map(receta, findReceta);
+            findReceta.setId(id); // Aseguramos que el ID no cambie
+            
+            return CompletableFuture.completedFuture(recetaRepository.save(findReceta));
+        } else {
+            return CompletableFuture.completedFuture(null);
+        }
+    }
+
+    @Async("asyncExecutor")
+    @Override
+    public CompletableFuture<Recetas> delete(Long id) {
+        Recetas findReceta = recetaRepository.findById(id).orElse(null);
+
+        if (findReceta != null) {
+            // Borrado lógico: cambiamos el status a 0
+            findReceta.setStatus(0);
+            return CompletableFuture.completedFuture(recetaRepository.save(findReceta));
+        } else {
+            return CompletableFuture.completedFuture(null);
+        }
+    }
+    @Async("asyncExecutor")
+    @Override
+    public CompletableFuture<Recetas> save(Recetas receta) {
+        // 1. Establecemos el estado inicial (Activo = 1)
+        // Al igual que con los estudiantes, las recetas nuevas nacen activas.
+        receta.setStatus(1);
+
+        // 2. Persistimos la entidad usando el repositorio
+        Recetas savedReceta = recetaRepository.save(receta);
+
+        // 3. Envolvemos el resultado en un CompletableFuture para cumplir con la interfaz
+        return CompletableFuture.completedFuture(savedReceta);
+    }
+}

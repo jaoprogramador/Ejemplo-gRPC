@@ -1,0 +1,5 @@
+package com.restaurantes.api.servicesimpl;
+
+public class RestauranteServiceImpl {
+
+}

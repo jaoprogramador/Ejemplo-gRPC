@@ -1,0 +1,5 @@
+package com.restaurantes.api.services;
+
+public interface RestauranteService {
+
+}

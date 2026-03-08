@@ -1,0 +1,24 @@
+package com.restaurantes.api.services;
+
+import com.restaurantes.api.entities.Restaurantes;
+
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+
+public interface RestauranteService {
+    
+    // Guardar un nuevo restaurante
+    CompletableFuture<Restaurante> save(Restaurantes restaurante);
+    
+    // Obtener un restaurante por su ID
+    CompletableFuture<Restaurante> getOneById(Long id);
+    
+    // Obtener el listado de todos los restaurantes
+    CompletableFuture<List<Restaurante>> getAll();
+    
+    // Actualizar un restaurante existente
+    CompletableFuture<Restaurante> update(Restaurantes restaurante, Long id);
+    
+    // Eliminar un restaurante (normalmente borrado lógico mediante status)
+    CompletableFuture<Restaurante> delete(Long id);
+}

@@ -1,0 +1,29 @@
+package com.recetas.api.entities;
+
+import jakarta.persistence.*; // Importante: usamos jakarta para Spring Boot 4
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Entity
+@Table(name = "Recetas")
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class Receta {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String nombre;
+    private String ingredientes;
+    
+    // Esta es la clave: el ID que vincula la receta con el restaurante
+    // equivalente al schoolId en tu ejemplo de Students
+    private Long restauranteId; 
+    
+    private Double precioSugerido;
+    private Integer status;
+
+}

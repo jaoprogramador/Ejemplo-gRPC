@@ -1,0 +1,37 @@
+package com.recetas.api.controllers;
+
+import com.recetas.api.entities.Recetas;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.concurrent.CompletableFuture;
+
+@RestController
+@RequestMapping("api/v1/recetas")
+public class RecetasController {
+
+    @Autowired
+    private RecetaService recetaService;
+
+    @PostMapping("")
+    public CompletableFuture<ResponseEntity> postRecord(@RequestBody Receta receta) {
+        return recetaService.save(receta).thenApply(ResponseEntity::ok);
+    }
+
+    @GetMapping("")
+    public CompletableFuture<ResponseEntity> getAll() {
+        return recetaService.getAll().thenApply(ResponseEntity::ok);
+    }
+
+    @PutMapping("/{id}")
+    public CompletableFuture<ResponseEntity> update(@RequestBody Receta receta, @PathVariable Long id) {
+        return recetaService.update(receta, id).thenApply(ResponseEntity::ok);
+    }
+
+    @DeleteMapping("/{id}")
+    public CompletableFuture<ResponseEntity> delete(@PathVariable Long id) {
+        return recetaService.delete(id).thenApply(ResponseEntity::ok);
+    }
+}

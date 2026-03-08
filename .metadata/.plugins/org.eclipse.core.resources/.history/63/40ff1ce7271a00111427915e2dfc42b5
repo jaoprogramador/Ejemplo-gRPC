@@ -1,0 +1,5 @@
+package com.restaurantes.api.entities;
+
+public class Restaurante {
+
+}

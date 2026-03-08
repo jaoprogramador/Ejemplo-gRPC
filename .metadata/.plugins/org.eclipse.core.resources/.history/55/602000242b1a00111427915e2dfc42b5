@@ -1,0 +1,75 @@
+package com.recetas.api.servicesimpl;
+
+import com.restaurantes.api.entities.Restaurante;
+import com.restaurantes.api.repositories.RestauranteRepository;
+import com.restaurantes.api.services.RestauranteService;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+
+@Service
+public class RestauranteServiceImpl implements RestauranteService {
+
+    @Autowired
+    private RestauranteRepository restauranteRepository;
+
+    private final ModelMapper modelMapper = new ModelMapper();
+
+    @Async("asyncExecutor")
+    @Override
+    public CompletableFuture<Restaurante> save(Restaurante restaurante) {
+        // Al igual que en students, marcamos como activo (1) al crear
+        restaurante.setStatus(1);
+        return CompletableFuture.completedFuture(restauranteRepository.save(restaurante));
+    }
+
+    @Async("asyncExecutor")
+    @Override
+    public CompletableFuture<Restaurante> getOneById(Long id) {
+        Optional<Restaurante> restaurante = restauranteRepository.findById(id);
+        return CompletableFuture.completedFuture(restaurante.orElse(null));
+    }
+
+    @Async("asyncExecutor")
+    @Override
+    public CompletableFuture<List<Restaurante>> getAll() {
+        return CompletableFuture.completedFuture(restauranteRepository.findAll());
+    }
+
+    @Async("asyncExecutor")
+    @Override
+    public CompletableFuture<Restaurante> update(Restaurante restaurante, Long id) {
+        // Buscamos el restaurante existente
+        Restaurante findRestaurante = restauranteRepository.findById(id).orElse(null);
+        
+        if (findRestaurante != null) {
+            // Usamos ModelMapper para pasar los datos del objeto 'restaurante' al encontrado
+            // Nota: Asegúrate de que los campos coincidan
+            modelMapper.map(restaurante, findRestaurante);
+            findRestaurante.setId(id); // Mantenemos el ID original
+            
+            return CompletableFuture.completedFuture(restauranteRepository.save(findRestaurante));
+        } else {
+            return CompletableFuture.completedFuture(null);
+        }
+    }
+
+    @Async("asyncExecutor")
+    @Override
+    public CompletableFuture<Restaurante> delete(Long id) {
+        Restaurante findRestaurante = restauranteRepository.findById(id).orElse(null);
+        
+        if (findRestaurante != null) {
+            // Borrado lógico: cambiamos el status a 0 en lugar de eliminar la fila
+            findRestaurante.setStatus(0);
+            return CompletableFuture.completedFuture(restauranteRepository.save(findRestaurante));
+        } else {
+            return CompletableFuture.completedFuture(null);
+        }
+    }
+}

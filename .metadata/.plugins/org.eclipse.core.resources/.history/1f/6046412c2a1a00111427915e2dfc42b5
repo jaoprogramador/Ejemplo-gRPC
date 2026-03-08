@@ -1,0 +1,18 @@
+package com.recetas.api.repositories;
+
+import com.recetas.api.entities.Receta;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+import java.util.List;
+
+@Repository
+public interface RecetaRepository extends JpaRepository<Receta, Long> {
+
+    /**
+     * Método adicional útil: Buscar todas las recetas 
+     * asociadas a un restaurante específico.
+     * Equivalente a buscar alumnos por schoolId.
+     */
+    List<Receta> findAllByRestauranteId(Long restauranteId);
+    
+}

@@ -1,0 +1,74 @@
+package com.restaurantes.api.servicesimpl;
+
+import com.restaurantes.api.entities.Restaurantes;
+import com.restaurantes.api.repositories.RestauranteRepository;
+import com.restaurantes.api.services.RestauranteService;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+
+@Service
+public class RestauranteServiceImpl implements RestauranteService {
+
+    @Autowired
+    private RestauranteRepository restauranteRepository;
+
+    @Async("asyncExecutor")
+    @Override
+    public CompletableFuture<Restaurantes> save(Restaurantes restaurante) {
+        // Siguiendo tu ejemplo de Schools, establecemos status 1 por defecto
+        restaurante.setStatus(1);
+        return CompletableFuture.completedFuture(restauranteRepository.save(restaurante));
+    }
+
+    @Async("asyncExecutor")
+    @Override
+    public CompletableFuture<Restaurantes> getOneById(Long id) {
+        Optional<Restaurantes> restaurante = restauranteRepository.findById(id);
+        return CompletableFuture.completedFuture(restaurante.orElse(null));
+    }
+
+    @Async("asyncExecutor")
+    @Override
+    public CompletableFuture<List<Restaurantes>> getAll() {
+        return CompletableFuture.completedFuture(restauranteRepository.findAll());
+    }
+
+    @Async("asyncExecutor")
+    @Override
+    public CompletableFuture<Restaurantes> update(Restaurantes restaurante, Long id) {
+        // Nota: restauranteRepository.getById(id) en versiones modernas de Spring 
+        // se suele reemplazar por findById para evitar excepciones innecesarias.
+        Restaurantes findRestaurante = restauranteRepository.findById(id).orElse(null);
+        
+        if (findRestaurante != null && findRestaurante.getId() != null) {
+            ModelMapper modelMapper = new ModelMapper();
+            // Mapeamos los datos nuevos al objeto encontrado
+            modelMapper.map(restaurante, findRestaurante);
+            findRestaurante.setId(id); // Aseguramos que el ID se mantenga
+            
+            return CompletableFuture.completedFuture(restauranteRepository.save(findRestaurante));
+        } else {
+            return null;
+        }
+    }
+
+    @Async("asyncExecutor")
+    @Override
+    public CompletableFuture<Restaurante> delete(Long id) {
+        Restaurante findRestaurante = restauranteRepository.findById(id).orElse(null);
+        
+        if (findRestaurante != null && findRestaurante.getId() != null) {
+            // Siguiendo tu ejemplo de Schools, hacemos borrado lógico (status = 0)
+            findRestaurante.setStatus(0);
+            return CompletableFuture.completedFuture(restauranteRepository.save(findRestaurante));
+        } else {
+            return null;
+        }
+    }
+}

@@ -1,0 +1,5 @@
+package com.recetas.api.services;
+
+public interface recetasService {
+
+}

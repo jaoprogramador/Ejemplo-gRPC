@@ -1,0 +1,5 @@
+package com.recetas.api.servicesimpl;
+
+public class RestauranteServiceImpl {
+
+}

@@ -1,0 +1,43 @@
+package com.restaurantes.api.controllers;
+
+import com.restaurantes.api.entities.Restaurante;
+import com.restaurantes.api.entities.Restaurantes;
+import com.restaurantes.api.services.RestauranteService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.concurrent.CompletableFuture;
+
+@RestController
+@RequestMapping("api/v1/restaurantes")
+public class RestaurantesController {
+
+    @Autowired
+    private RestauranteService restauranteService;
+
+    @PostMapping("")
+    public CompletableFuture<ResponseEntity> postRecord(@RequestBody Restaurantes restaurante) {
+        return restauranteService.save(restaurante).thenApply(ResponseEntity::ok);
+    }
+
+    @GetMapping("")
+    public CompletableFuture<ResponseEntity> getAll() {
+        return restauranteService.getAll().thenApply(ResponseEntity::ok);
+    }
+
+    @GetMapping("/{id}")
+    public CompletableFuture<ResponseEntity> getOneById(@PathVariable Long id) {
+        return restauranteService.getOneById(id).thenApply(ResponseEntity::ok);
+    }
+
+    @PutMapping("/{id}")
+    public CompletableFuture<ResponseEntity> update(@RequestBody Restaurantes restaurante, @PathVariable Long id) {
+        return restauranteService.update(restaurante, id).thenApply(ResponseEntity::ok);
+    }
+
+    @DeleteMapping("/{id}")
+    public CompletableFuture<ResponseEntity> delete(@PathVariable Long id) {
+        return restauranteService.delete(id).thenApply(ResponseEntity::ok);
+    }
+}
