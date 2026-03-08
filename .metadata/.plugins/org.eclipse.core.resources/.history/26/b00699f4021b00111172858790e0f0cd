@@ -1,0 +1,44 @@
+package com.restaurantes.api.grpcserviceimpl;
+
+import java.util.concurrent.CompletableFuture;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.restaurantes.api.entities.Restaurantes;
+import com.restaurantes.api.grpc.Empty;
+import com.restaurantes.api.grpc.RestauranteList;
+import com.restaurantes.api.grpc.RestauranteObject;
+import com.restaurantes.api.grpc.RestauranteServiceGrpc.RestauranteServiceImplBase;
+import com.restaurantes.api.grpc.id;
+import com.restaurantes.api.services.RestauranteService;
+
+import io.grpc.stub.StreamObserver;
+import net.devh.boot.grpc.server.service.GrpcService;
+
+@GrpcService
+public class GrpcRestaurantesServiceImpl extends RestauranteServiceImplBase {
+	@Autowired
+	private RestauranteService restauranteService;
+
+	@Override
+	public void getOneById(id request, StreamObserver<RestauranteObject> responseObserver) {
+		// TODO Auto-generated method stub
+		CompletableFuture<Restaurantes> restauranteEncontrado = restauranteService.getOneById(request.getId());
+		restauranteEncontrado.join();
+		RestauranteObject objectRestauranteDevuelto = RestauranteObject.newBuilder()
+				.setId(	restauranteEncontrado.join().getId())
+				.setNombre(restauranteEncontrado.join().getNombre())
+				.setDireccion(restauranteEncontrado.join().getDireccion())
+				.setEspecialidad(restauranteEncontrado.join().getEspecialidad())
+				.setEstado(restauranteEncontrado.join().getStatus())
+				.build();
+				
+	}
+
+	@Override
+	public void getAll(Empty request, StreamObserver<RestauranteList> responseObserver) {
+		// TODO Auto-generated method stub
+		CompleteFuture <List<Restaurantes>> restaurantesLista = restauranteService.getAll();
+	}
+	
+}

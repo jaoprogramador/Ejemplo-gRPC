@@ -1,0 +1,7 @@
+package com.restaurantes.api.grpcserviceimpl;
+
+import com.restaurantes.api.grpc.RestauranteServiceGrpc.RestauranteServiceImplBase;
+
+public class GrpcRestaurantesServiceImpl extends RestauranteServiceImplBase {
+
+}

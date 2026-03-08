@@ -1,0 +1,5 @@
+package com.restaurantes.api.grpcserviceimpl;
+
+public class GrpcRestaurantesServiceImpl {
+
+}

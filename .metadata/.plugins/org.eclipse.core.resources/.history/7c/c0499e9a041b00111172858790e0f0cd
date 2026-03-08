@@ -1,0 +1,63 @@
+package com.restaurantes.api.grpcserviceimpl;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.restaurantes.api.entities.Restaurantes;
+import com.restaurantes.api.grpc.Empty;
+import com.restaurantes.api.grpc.RestauranteList;
+import com.restaurantes.api.grpc.RestauranteObject;
+import com.restaurantes.api.grpc.RestauranteServiceGrpc.RestauranteServiceImplBase;
+import com.restaurantes.api.grpc.id;
+import com.restaurantes.api.services.RestauranteService;
+
+import io.grpc.netty.shaded.io.netty.util.concurrent.CompleteFuture;
+import io.grpc.stub.StreamObserver;
+import net.devh.boot.grpc.server.service.GrpcService;
+
+@GrpcService
+public class GrpcRestaurantesServiceImpl extends RestauranteServiceImplBase {
+	@Autowired
+	private RestauranteService restauranteService;
+
+	@Override
+	public void getOneById(id request, StreamObserver<RestauranteObject> responseObserver) {
+		// TODO Auto-generated method stub
+		CompletableFuture<Restaurantes> restauranteEncontrado = restauranteService.getOneById(request.getId());
+		restauranteEncontrado.join();
+		RestauranteObject objectRestauranteDevuelto = RestauranteObject.newBuilder()
+				.setId(	restauranteEncontrado.join().getId())
+				.setNombre(restauranteEncontrado.join().getNombre())
+				.setDireccion(restauranteEncontrado.join().getDireccion())
+				.setEspecialidad(restauranteEncontrado.join().getEspecialidad())
+				.setEstado(restauranteEncontrado.join().getStatus())
+				.build();
+				
+	}
+
+	@Override
+	public void getAll(Empty request, StreamObserver<RestauranteList> responseObserver) {
+		// TODO Auto-generated method stub
+		CompletableFuture<List<Restaurantes>> restaurantesLista = restauranteService.getAll();
+		List <RestauranteObject> restauranteGrpcList = new ArrayList<>();
+		
+		for (int i = 0; i < restaurantesLista.join().size(); i++) {
+			RestauranteObject restauranteAdd = RestauranteObject.newBuilder()
+					.setId(	restaurantesLista.join().get(i).getId())
+					.setNombre(restaurantesLista.join().get(i).getNombre())
+					.setDireccion(restaurantesLista.join().get(i).getDireccion())
+					.setEspecialidad(restaurantesLista.join().get(i).getEspecialidad())
+					.setEstado(restaurantesLista.join().get(i).getStatus())
+					.build();
+			
+			restauranteGrpcList.add(restauranteAdd);
+					
+					
+		}
+	}
+	
+}
