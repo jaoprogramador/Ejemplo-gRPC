@@ -1,2 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<qualifiedTypeNameHistroy/>
+<qualifiedTypeNameHistroy>
+    <fullyQualifiedTypeName name="net.devh.boot.grpc.server.service.GrpcService"/>
+    <fullyQualifiedTypeName name="org.springframework.beans.factory.annotation.Autowired"/>
+    <fullyQualifiedTypeName name="com.restaurantes.api.services.RestauranteService"/>
+    <fullyQualifiedTypeName name="java.util.concurrent.CompletableFuture"/>
+    <fullyQualifiedTypeName name="io.grpc.netty.shaded.io.netty.util.concurrent.CompleteFuture"/>
+    <fullyQualifiedTypeName name="java.util.ArrayList"/>
+    <fullyQualifiedTypeName name="com.restaurantes.api.grpc.RestauranteObject.Builder"/>
+    <fullyQualifiedTypeName name="com.restaurantes.api.grpc.RestauranteList.Builder"/>
+    <fullyQualifiedTypeName name="com.restaurantes.api.grpc.RestauranteList"/>
+    <fullyQualifiedTypeName name="com.restaurantes.api.grpc.RestauranteObject"/>
+</qualifiedTypeNameHistroy>

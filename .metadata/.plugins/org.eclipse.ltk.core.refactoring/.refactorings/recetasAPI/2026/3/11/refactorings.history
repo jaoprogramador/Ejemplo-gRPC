@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename type &apos;com.recetas.api.entities.Restaurantes&apos; to &apos;Restaurante&apos;&#x0D;&#x0A;- Original project: &apos;recetasAPI&apos;&#x0D;&#x0A;- Original element: &apos;com.recetas.api.entities.Restaurantes&apos;&#x0D;&#x0A;- Renamed element: &apos;com.recetas.api.entities.Restaurante&apos;&#x0D;&#x0A;- Update references to refactored element&#x0D;&#x0A;- Update textual occurrences in comments and strings" description="Rename type &apos;Restaurantes&apos;" flags="589830" id="org.eclipse.jdt.ui.rename.type" input="/src\/main\/java=/optional=/true=/=/maven.pomderived=/true=/&lt;com.recetas.api.entities{Restaurantes.java[Restaurantes" matchStrategy="1" name="Restaurante" qualified="false" references="true" similarDeclarations="false" stamp="1773045478880" textual="false" version="1.0"/>
+</session>

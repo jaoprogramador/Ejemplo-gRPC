@@ -1,6 +1,8 @@
 package com.recetas.api.controllers;
 
+import com.recetas.api.entities.InfoCompletaDTO;
 import com.recetas.api.entities.Recetas;
+import com.recetas.api.grpcclient.RestaurantesGrpcClient;
 import com.recetas.api.services.RecetasService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,8 @@ public class RecetasController {
 
     @Autowired
     private RecetasService recetaService;
+    @Autowired
+    RestaurantesGrpcClient restaurantesClient;
 
     @PostMapping("")
     public CompletableFuture<ResponseEntity> postRecord(@RequestBody Recetas receta) {
@@ -34,5 +38,10 @@ public class RecetasController {
     @DeleteMapping("/{id}")
     public CompletableFuture<ResponseEntity> delete(@PathVariable Long id) {
         return recetaService.delete(id).thenApply(ResponseEntity::ok);
+    }
+    
+    @GetMapping("complete/{id}")
+    public InfoCompletaDTO getRecetasCompletasInfo(@PathVariable Long id) {
+        return restaurantesClient.getInfoCompletaRecetas(id);
     }
 }

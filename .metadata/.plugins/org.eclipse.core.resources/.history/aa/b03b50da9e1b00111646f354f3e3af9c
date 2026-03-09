@@ -1,0 +1,47 @@
+package com.recetas.api.controllers;
+
+import com.recetas.api.entities.InfoCompletaDTO;
+import com.recetas.api.entities.Recetas;
+import com.recetas.api.grpcclient.RestaurantesGrpcClient;
+import com.recetas.api.services.RecetasService;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.concurrent.CompletableFuture;
+
+@RestController
+@RequestMapping("api/v1/recetas")
+public class RecetasController {
+
+    @Autowired
+    private RecetasService recetaService;
+    @Autowired
+    RestaurantesGrpcClient restaurantesClient;
+
+    @PostMapping("")
+    public CompletableFuture<ResponseEntity> postRecord(@RequestBody Recetas receta) {
+        return recetaService.save(receta).thenApply(ResponseEntity::ok);
+    }
+
+    @GetMapping("")
+    public CompletableFuture<ResponseEntity> getAll() {
+        return recetaService.getAll().thenApply(ResponseEntity::ok);
+    }
+
+    @PutMapping("/{id}")
+    public CompletableFuture<ResponseEntity> update(@RequestBody Recetas receta, @PathVariable Long id) {
+        return recetaService.update(receta, id).thenApply(ResponseEntity::ok);
+    }
+
+    @DeleteMapping("/{id}")
+    public CompletableFuture<ResponseEntity> delete(@PathVariable Long id) {
+        return recetaService.delete(id).thenApply(ResponseEntity::ok);
+    }
+    
+    @GetMapping("/{id}")
+    public InfoCompletaDTO getRecetasCompletasInfo(@PathVariable Long id) {
+        return restaurantesClient.getInfoCompletaRecetas(id);
+    }
+}

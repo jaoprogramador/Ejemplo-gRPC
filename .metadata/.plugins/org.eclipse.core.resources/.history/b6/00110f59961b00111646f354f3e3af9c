@@ -1,0 +1,5 @@
+package com.recetas.api.grpcclient;
+
+public class RestaurantesGrpcClient {
+
+}

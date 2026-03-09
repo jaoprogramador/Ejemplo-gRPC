@@ -1,0 +1,49 @@
+package com.recetas.api.grpcclient;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.recetas.api.entities.InfoCompletaDTO;
+import com.recetas.api.entities.Recetas;
+import com.recetas.api.entities.Restaurante;
+import com.recetas.api.repositories.RecetaRepository;
+import com.restaurantes.api.grpc.RestauranteObject;
+import com.restaurantes.api.grpc.RestauranteServiceGrpc;
+import com.restaurantes.api.grpc.RestauranteServiceGrpc.RestauranteServiceBlockingStub;
+
+import io.grpc.ManagedChannel;
+import io.grpc.netty.shaded.io.grpc.netty.NettyChannelBuilder;
+
+@Service
+public class RestaurantesGrpcClient {
+	@Autowired
+	private RecetaRepository recetaRepository;
+	 
+	ManagedChannel channel = NettyChannelBuilder.forTarget("dns:///localhost:9091").usePlaintext().build();
+	
+	public InfoCompletaDTO getInfoCompletaRecetas (Long id) {
+		Recetas recetas = recetaRepository.getById(id);
+		RestauranteServiceBlockingStub stub = RestauranteServiceGrpc.newBlockingStub(channel);
+		
+		
+		RestauranteObject restauranteRecuperado = stub.getOneById(com.restaurantes.api.grpc.id.newBuilder().setId(recetas.getRestauranteId()).build());
+		//channel.shutdown();
+		
+		Restaurante restaurante = new Restaurante();
+		restaurante.setId(restauranteRecuperado.getId());
+		restaurante.setNombre(restauranteRecuperado.getNombre());
+		restaurante.setDireccion(restauranteRecuperado.getDireccion());
+		restaurante.setEspecialidad(restauranteRecuperado.getEspecialidad());
+		restaurante.setStatus(restauranteRecuperado.getEstado());
+		
+		
+		InfoCompletaDTO infoCompleta = new InfoCompletaDTO();
+		infoCompleta.setId(recetas.getId());
+		infoCompleta.setNombre(recetas.getNombre());
+		infoCompleta.setOrigen(recetas.getOrigen());
+		infoCompleta.setIngredientes(recetas.getIngredientes());
+		infoCompleta.setRestaurantes(restaurante);
+		return infoCompleta;
+		
+	}
+}

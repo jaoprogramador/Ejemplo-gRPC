@@ -36,6 +36,9 @@ public class GrpcRestaurantesServiceImpl extends RestauranteServiceImplBase {
 				.setEspecialidad(restauranteEncontrado.join().getEspecialidad())
 				.setEstado(restauranteEncontrado.join().getStatus())
 				.build();
+		
+		responseObserver.onNext(objectRestauranteDevuelto); 
+	    responseObserver.onCompleted();                    
 				
 	}
 

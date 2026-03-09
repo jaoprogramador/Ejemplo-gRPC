@@ -1,0 +1,20 @@
+package com.recetas.api.grpcclient;
+
+import org.springframework.stereotype.Service;
+
+import com.recetas.api.entities.InfoCompletaDTO;
+
+
+
+import io.grpc.ManagedChannel;
+import io.grpc.netty.shaded.io.grpc.netty.NettyChannelBuilder;
+
+@Service
+public class RestaurantesGrpcClient {
+	
+	ManagedChannel channel = NettyChannelBuilder.forTarget("dns:///localhost:9090").usePlaintext().build();
+	
+	public InfoCompletaDTO getInfoCompletaRecetas (Long id) {
+		//RestauranteServiceGrpc.RestauranteServiceBlockingStub stub = RestauranteServiceGrpc.
+	}
+}

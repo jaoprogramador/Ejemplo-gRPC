@@ -18,9 +18,6 @@ public class Recetas {
 
     private String nombre;
     private String ingredientes;
-    
-    // Esta es la clave: el ID que vincula la receta con el restaurante
-    // equivalente al schoolId en tu ejemplo de Students
     private Long restauranteId; 
     private String origen;
     private Double precioSugerido;
